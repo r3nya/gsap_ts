@@ -8,7 +8,8 @@ class Main
 {
     constructor ()
     {
-        TweenMax.delayedCall(1, this.init.bind(this));
+        // TweenMax.delayedCall(1, this.init.bind(this));
+        console.log('hey');
     }
 
     private init():void

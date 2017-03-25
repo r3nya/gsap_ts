@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
@@ -8,9 +7,8 @@ module.exports = {
         'app': './src/Main.ts'
     },
     output: {
-        path: path.resolve('dist'),
-        publicPath: '/',
-        filename: '[name].[hash].js'
+        path: __dirname + '/dist',
+        filename: 'bundle.js'
     },
     resolve: {
         extensions: ['.ts', '.js']
@@ -19,40 +17,20 @@ module.exports = {
     module: {
         rules: [
             {
+              test: /\.tsx?$/,
+              loader: "awesome-typescript-loader"
+            },
+            {
                 test: /\.html$/,
                 loader: 'html-loader'
-            },
-            {
-                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                loader: 'file-loader?name=assets/[name].[hash].[ext]'
-            },
-            {
-                test: /\.css$/,
-                exclude: path.resolve('src', 'app'),
-                loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader?sourceMap' })
-            },
-            {
-                test: /\.css$/,
-                include: path.resolve('src', 'app'),
-                loader: 'raw-loader'
-            }]
+            }
+          ]
     },
 
     plugins: [
-        new webpack.ContextReplacementPlugin(
-            /angular(\|\/)core(\|\/)(esm(\|\/)src|src)(\|\/)linker/,
-            path.resolve('./src'), // каталог с исходными файлами
-            {} // карта маршрутов
-        ),
-
-        new webpack.optimize.CommonsChunkPlugin({
-            name: ['app', 'vendor', 'polyfills']
-        }),
-
         new HtmlWebpackPlugin({
             template: 'index.html'
         }),
-        new ExtractTextPlugin('[name].[hash].css'),
         new webpack.NoEmitOnErrorsPlugin(),
 
         new webpack.optimize.UglifyJsPlugin({
